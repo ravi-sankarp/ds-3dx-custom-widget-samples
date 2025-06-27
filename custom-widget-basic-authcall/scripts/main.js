@@ -101,7 +101,7 @@ function executeInitWidget(w)
           alert(err);
         },
         updateSecurityContextPreferences : () => {
-
+          window.i3DXCompassServices = i3DXCompassServices;
           i3DXCompassServices.getServiceUrl({
         
             serviceName: "3DSpace",
