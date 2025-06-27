@@ -1,12 +1,12 @@
 //docs https://media.3ds.com/support/documentation/developer/Cloud/en/DSDocNS.htm?show=../generated/js/_index/WebappsUtils.htm#function
 //CPE Euromed - bootstrap
 
-function executeInitWidget(w) 
-{ 
-    require(["DS/WAFData/WAFData", "DS/i3DXCompassServices/i3DXCompassServices"], 
-    
+function executeInitWidget(w) {
+  require(["DS/WAFData/WAFData", "DS/i3DXCompassServices/i3DXCompassServices"],
+
     function (WAFData, i3DXCompassServices) {
-      
+      window.test = { i3DXCompassServices, WAFData, w };
+
       var myWidget = {
         endEdit: function () {
           console.log("3DX Custom Widget endEdit called");
@@ -36,26 +36,26 @@ function executeInitWidget(w)
         onResetSearch: function () {
           console.log("3DX Custom Widget onResetSearch called.");
         },
-        setSecurityContextArrayCallback : (dataResp) => {
+        setSecurityContextArrayCallback: (dataResp) => {
 
           let securityContextArray = myWidget.parseSecurityContextArray(dataResp);
 
           let secCtxtPreference = {
-                name: "SecurityContextPreference",
-                type: "list",
-                label: "Security Context",
-                options: securityContextArray,
-                defaultValue: securityContextArray[0] ,
-            } ;
-            
-            widget.addPreference(secCtxtPreference);
-        
+            name: "SecurityContextPreference",
+            type: "list",
+            label: "Security Context",
+            options: securityContextArray,
+            defaultValue: securityContextArray[0],
+          };
+
+          widget.addPreference(secCtxtPreference);
+
         },
-        parseSecurityContextArray : (data) => {
+        parseSecurityContextArray: (data) => {
 
           let securityContextArray = [];
 
-          if (data ==null) return securityContextArray;
+          if (data == null) return securityContextArray;
 
           if (data.collabspaces == null) return securityContextArray;
 
@@ -63,8 +63,7 @@ function executeInitWidget(w)
 
           if (!Array.isArray(collabspaces)) return securityContextArray;
 
-          for (let i=0; i<collabspaces.length; i++)
-          {
+          for (let i = 0; i < collabspaces.length; i++) {
             let collabspace = collabspaces[i];
             if (collabspace == null) continue;
             if (collabspace.name == null) continue;
@@ -72,8 +71,7 @@ function executeInitWidget(w)
 
             let collabspaceName = collabspace.name;
 
-            for (let j=0; j< collabspace.couples.length; j++)
-            {
+            for (let j = 0; j < collabspace.couples.length; j++) {
               let collabspaceCouple = collabspace.couples[j];
 
               if (collabspaceCouple.organization == null) continue;
@@ -91,51 +89,50 @@ function executeInitWidget(w)
               newSecurityContextOption.value = roleName + "." + organizationName + "." + collabspaceName;
 
               securityContextArray.push(newSecurityContextOption);
-            }    
+            }
           }
 
           return securityContextArray;
 
         },
-        setSecurityContextArrayError : (err) =>{
+        setSecurityContextArrayError: (err) => {
           alert(err);
         },
-        updateSecurityContextPreferences : () => {
-          window.i3DXCompassServices = i3DXCompassServices;
+        updateSecurityContextPreferences: () => {
           i3DXCompassServices.getServiceUrl({
-        
+
             serviceName: "3DSpace",
-            
+
             platformId: widget.getValue("x3dPlatformId"),
-          
+
             onComplete: serviceUrl => {
 
               let url = serviceUrl + "/resources/modeler/pno/person?current=true&select=collabspaces";
 
               WAFData.authenticatedRequest(url, {
-                method: "GET",                        
+                method: "GET",
                 type: "json",
 
-                onComplete: myWidget.setSecurityContextArrayCallback,                         
+                onComplete: myWidget.setSecurityContextArrayCallback,
                 onFailure: myWidget.setSecurityContextArrayError,
                 onPassportError: myWidget.setSecurityContextArrayError,
 
                 onTimeout: myWidget.setSecurityContextArrayError
               })
             }
-        })
-      }
-    };//myWidget
+          })
+        }
+      };//myWidget
 
-    w.addEvent("endEdit",          myWidget.endEdit);
-    w.addEvent("onEdit",           myWidget.onEdit);
-    w.addEvent("onKeyboardAction", myWidget.onKeyboardAction);
-    w.addEvent("onLoad",           myWidget.onLoad);
-    w.addEvent("onRefresh",        myWidget.onRefresh);
-    w.addEvent("onResize",         myWidget.onResize);
-    w.addEvent("onViewChange",     myWidget.onViewChange);
-    w.addEvent("onSearch",         myWidget.onSearch);
-    w.addEvent("onResetSearch",    myWidget.onResetSearch);
+      w.addEvent("endEdit", myWidget.endEdit);
+      w.addEvent("onEdit", myWidget.onEdit);
+      w.addEvent("onKeyboardAction", myWidget.onKeyboardAction);
+      w.addEvent("onLoad", myWidget.onLoad);
+      w.addEvent("onRefresh", myWidget.onRefresh);
+      w.addEvent("onResize", myWidget.onResize);
+      w.addEvent("onViewChange", myWidget.onViewChange);
+      w.addEvent("onSearch", myWidget.onSearch);
+      w.addEvent("onResetSearch", myWidget.onResetSearch);
 
-  }); // require
+    }); // require
 } // executeInitWidget
