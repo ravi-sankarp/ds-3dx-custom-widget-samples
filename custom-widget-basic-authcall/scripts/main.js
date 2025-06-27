@@ -5,6 +5,7 @@ function executeInitWidget(w) {
   require(["DS/WAFData/WAFData", "DS/i3DXCompassServices/i3DXCompassServices"],
 
     function (WAFData, i3DXCompassServices) {
+      debugger;
       window.test = { i3DXCompassServices, WAFData, w };
 
       var myWidget = {
